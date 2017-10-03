@@ -5,6 +5,9 @@ using System.Linq;
 
 namespace LinqQuiz.Library
 {
+    /// <summary>
+    /// in Zusammenarbeit mit Gregor Arbeithuber
+    /// </summary>
     public static class Quiz
     {
         /// <summary>
@@ -16,7 +19,7 @@ namespace LinqQuiz.Library
         /// </exception>
         public static int[] GetEvenNumbers(int exclusiveUpperLimit)
         {
-            throw new NotImplementedException();
+            return (from number in Enumerable.Range(1, exclusiveUpperLimit - 1) where (number % 2) == 0 select number).ToArray();
         }
 
         /// <summary>
@@ -33,7 +36,8 @@ namespace LinqQuiz.Library
         /// </remarks>
         public static int[] GetSquares(int exclusiveUpperLimit)
         {
-            throw new NotImplementedException();
+            /// checked: damit OverflowException geworfen wird
+            return checked(exclusiveUpperLimit > 0 ? from number in Enumerable.Range(1, exclusiveUpperLimit - 1) where (number % 7) == 0 orderby number descending select (number * number) : from number in Enumerable.Range(0, 0) orderby number descending select (number)).ToArray();
         }
 
         /// <summary>
@@ -52,7 +56,7 @@ namespace LinqQuiz.Library
         /// </remarks>
         public static FamilySummary[] GetFamilyStatistic(IReadOnlyCollection<IFamily> families)
         {
-            throw new NotImplementedException();
+            return families.Select(family=> new FamilySummary { AverageAge = family.Persons.Count() == 0 ? 0 : family.Persons.Average(person => person.Age), FamilyID = family.ID, NumberOfFamilyMembers = family.Persons.Count() }).ToArray();
         }
 
         /// <summary>
@@ -70,7 +74,11 @@ namespace LinqQuiz.Library
         /// </remarks>
         public static (char letter, int numberOfOccurrences)[] GetLetterStatistic(string text)
         {
-            throw new NotImplementedException();
+            /// 1. Alles in Großbuchstaben umwandeln
+            /// 2. Nur Buchstaben (A-Z) auswählen
+            /// 3. Gruppieren nach Zeichen
+            /// 4. Zeichen auswählen und zählen, wie oft es vorkommt
+            return text.ToUpper().Where(char.IsLetter).GroupBy(c => c).Select(c => (c.Key, c.Count())).ToArray();
         }
     }
 }
